@@ -16,7 +16,7 @@ bsixfour -in ./cog.png
 ```
 
 ### Source
-![Cog](/cog.png)
+![Cog](/example/cog.png)
 
 ### Result
 ```html
