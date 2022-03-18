@@ -1,6 +1,8 @@
 # bsixfour
 Converts the specified image to a web-ready base64 encoded string,
 and saves this to the file and location specified.
+If no save location is specified, bsixfour assumes you want to save in the same location as the source file.
+bsixfour automatically handles the file extension.
 
 ---
 
