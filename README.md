@@ -10,13 +10,13 @@ bsixfour -in <inPath> [ -out <outPath> -html [true | false] -raw ]
 ```
 
 ## Exaples
+### Source
+![Cog](/example/cog.png)
+
 ### HTML Output
 ```bash
 bsixfour -in ./cog.png
 ```
-
-### Source
-![Cog](/example/cog.png)
 
 ### Result
 ```html
@@ -31,9 +31,6 @@ bsixfour -in ./cog.png
 ```bash
 bsixfour -in ./cog.png -html false
 ```
-
-#### Source
-![Cog](/cog.png)
 
 #### Result
 ```
