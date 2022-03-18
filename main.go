@@ -3,85 +3,46 @@ package main
 import (
 	"bytes"
 	"encoding/base64"
-	"image/color"
+	"errors"
+	"fmt"
 	"image/jpeg"
 	"image/png"
+	"io/ioutil"
 	"os"
-	"strings"
-	"time"
-
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/app"
-	"fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/container"
-	"fyne.io/fyne/v2/dialog"
-	"fyne.io/fyne/v2/layout"
+	"regexp"
 )
 
 func main() {
+	args := os.Args[1:]
 
-	a := app.New()
-	w := a.NewWindow("bsixfour")
-	w.Resize(fyne.NewSize(1024, 768))
+	openPath := args[0]
+	savePath := args[1]
 
-	green := color.NRGBA{R: 0, G: 180, B: 0, A: 255}
-	b64Text := canvas.NewText("", green)
-	clock := canvas.NewText("", green)
+	file, err := os.Open(openPath)
+	check(err)
 
-	content := container.New(
-		layout.NewVBoxLayout(),
-		container.New(layout.NewCenterLayout(), clock),
-		container.New(layout.NewPaddedLayout(), b64Text),
-	)
+	info, err := file.Stat()
+	check(err)
 
-	var imgBytes []byte
-	var ext string
-	var err error
-	var b64Data string
-	d := dialog.NewFileOpen(func(f fyne.URIReadCloser, er error) {
-		if er != nil {
-			err = er
-			return
-		}
-		ext = f.URI().Extension()
-		ext = strings.Replace(ext, ".", "", -1)
-		if !(ext == "jpg" || ext == "jpeg" || ext == "png") {
-			err = er
-			return
-		}
-		imgBytes, er = os.ReadFile(f.URI().Path())
-		err = er
-		if err != nil {
-			panic(err)
-		}
-		b64Data, er = imgToBase64(imgBytes, ext)
-		updateText(b64Text, b64Data)
-	}, w)
-	d.Show()
+	reg := regexp.MustCompile(`(?m:.*?\.(\w+)$)`)
+	match := reg.FindAllStringSubmatch(info.Name(), -1)
+	if match == nil {
+		panic(errors.New("No file extension found!"))
+	}
+	ext := match[0][1] // first match, first group
 
-	updateTime(clock)
-	w.SetContent(content)
-	go func() {
-		for range time.Tick(time.Second) {
-			updateTime(clock)
-			//updateText(b64Text, b64Data)
-		}
-	}()
+	imgBytes, err := ioutil.ReadAll(file)
+	check(err)
 
-	w.Show()
+	b64String, err := imgToBase64(imgBytes, ext)
 
-	a.Run()
-}
+	b64Data := []byte(b64String)
 
-func updateTime(clock *canvas.Text) {
-	formatted := time.Now().Format("Time: 03:04:05")
-	clock.Text = formatted
-	clock.Refresh()
-}
+	err = os.WriteFile(savePath, b64Data, 0644)
+	check(err)
 
-func updateText(t *canvas.Text, b string) {
-	t.Text = b
-	t.Refresh()
+	fmt.Println("Success!")
+
 }
 
 func imgToBase64(b []byte, ext string) (string, error) {
@@ -100,7 +61,13 @@ func imgToBase64(b []byte, ext string) (string, error) {
 		}
 		b = buf.Bytes()
 	default:
-		return "", err
+		return "", errors.New("Invalid file type!")
 	}
 	return "data:image/png;base64," + base64.StdEncoding.EncodeToString(b), err
+}
+
+func check(e error) {
+	if e != nil {
+		panic(e)
+	}
 }
