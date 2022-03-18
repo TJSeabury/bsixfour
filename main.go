@@ -58,7 +58,7 @@ func main() {
 	b64String, err := imgToBase64(imgBytes, ext)
 	if *rawPtr == false {
 		if *htmlPtr == true {
-			htmlString = "<img src=\"data:image/png;base64," + b64String + "\" alt=\"\">"
+			htmlString = "<img src=\"data:image/png;base64," + b64String + "\" alt=\"" + name + "\">"
 			b64Data = []byte(htmlString)
 			savePath += ".html"
 		} else {
