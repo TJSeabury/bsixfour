@@ -15,7 +15,14 @@ import (
 func main() {
 	args := os.Args[1:]
 
+	// Ensure enough args given
+	if len(args) < 1 {
+		panic(errors.New("Must specify a read file path!"))
+	}
 	openPath := args[0]
+	if len(args) < 2 {
+		panic(errors.New("Must specify a save file path!"))
+	}
 	savePath := args[1]
 
 	file, err := os.Open(openPath)
