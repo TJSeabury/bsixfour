@@ -1,5 +1,6 @@
 # bsixfour
-Converts the specified image to a web-ready base64 encoded string.
+Converts the specified image to a web-ready base64 encoded string,
+and saves this to the file and location specified.
 
 ---
 
