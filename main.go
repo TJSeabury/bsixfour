@@ -33,10 +33,10 @@ func main() {
 
 	// ok, lets extract all the useful parts from inPath
 	// see: https://regex101.com/r/qZouIJ/1
-	reg := regexp.MustCompile(`(?m:(.*?)\\(\w+)\.(\w+)$)`)
+	reg := regexp.MustCompile(`(?m:(.+?)(?:\\|/)([\w-_]+)\.(\w+)$)`)
 	match := reg.FindAllStringSubmatch(file.Name(), -1)
 	if match == nil {
-		panic(errors.New("No file extension found!"))
+		panic(errors.New("No file extension found in: " + file.Name()))
 	}
 	path := match[0][1] // first match, first group, the directory path
 	name := match[0][2] // first match, second group, the file name
