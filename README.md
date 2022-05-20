@@ -1,6 +1,8 @@
 # bsixfour
 Converts the specified image to a web-ready base64 encoded string,
 and saves this to the file and location specified.
+If no save location is specified, bsixfour assumes you want to save in the same location as the source file.
+bsixfour automatically handles the file extension.
 
 ---
 
@@ -10,13 +12,13 @@ bsixfour -in <inPath> [ -out <outPath> -html [true | false] -raw ]
 ```
 
 ## Exaples
+### Source
+![Cog](/example/cog.png)
+
 ### HTML Output
 ```bash
 bsixfour -in ./cog.png
 ```
-
-### Source
-![Cog](/cog.png)
 
 ### Result
 ```html
@@ -31,9 +33,6 @@ bsixfour -in ./cog.png
 ```bash
 bsixfour -in ./cog.png -html false
 ```
-
-#### Source
-![Cog](/cog.png)
 
 #### Result
 ```
